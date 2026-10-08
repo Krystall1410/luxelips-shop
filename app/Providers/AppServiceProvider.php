@@ -19,6 +19,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if ($this->app->environment('production') || str_starts_with(config('app.url'), 'https://')) {
+            \Illuminate\Support\Facades\URL::forceScheme('https');
+        }
+
         \Illuminate\Support\Facades\View::composer('user.*', function ($view) {
             if (!$view->offsetExists('categories')) {
                 $view->with('categories', \App\Models\Category::where('is_active', true)
