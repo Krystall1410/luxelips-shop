@@ -1,0 +1,291 @@
+/* Navbar Styling */
+.navbar-custom,
+.lux-navbar {
+    background-color: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(236, 72, 153, 0.22);
+    box-shadow: 0 4px 20px rgba(236, 72, 153, 0.06);
+    z-index: 1040 !important;
+}
+
+.nav-link {
+    color: #334155 !important;
+    font-weight: 500;
+    transition: all 0.2s;
+    white-space: nowrap !important;
+    font-size: 0.9rem;
+    padding: 0.45rem 0.65rem !important;
+}
+
+.nav-link:hover,
+.nav-link.active,
+.nav-link.show {
+    color: var(--rose-primary) !important;
+}
+
+.dropdown-toggle::after {
+    margin-left: 0.4em;
+    vertical-align: 0.18em;
+}
+
+/* Nút bấm Header Navbar */
+.nav-header-btn,
+.nav-header-btn-primary {
+    height: 38px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 1.15rem !important;
+    font-size: 0.85rem !important;
+    font-weight: 500 !important;
+    border-radius: 9999px !important;
+    white-space: nowrap !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease-in-out !important;
+    line-height: 1 !important;
+    gap: 6px !important;
+    flex-shrink: 0 !important;
+}
+
+.nav-header-btn {
+    background-color: #ffffff !important;
+    border: 1px solid rgba(236, 72, 153, 0.3) !important;
+    color: #0f172a !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.nav-header-btn:hover,
+.nav-header-btn:focus,
+.nav-header-btn:active {
+    background-color: #fdf2f8 !important;
+    border-color: var(--rose-primary) !important;
+    color: var(--rose-primary) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(236, 72, 153, 0.2) !important;
+}
+
+.nav-header-btn-primary {
+    background: linear-gradient(135deg, #ec4899 0%, #db2777 100%) !important;
+    border: none !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    box-shadow: 0 4px 12px rgba(236, 72, 153, 0.35) !important;
+}
+
+.nav-header-btn-primary:hover {
+    opacity: 0.95;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(236, 72, 153, 0.45) !important;
+    color: #ffffff !important;
+}
+
+.nav-header-btn i,
+.nav-header-btn-primary i {
+    font-size: 0.95rem !important;
+    line-height: 1 !important;
+}
+
+/* Search Box */
+.nav-search-box {
+    position: relative;
+    width: 250px;
+    max-width: 100%;
+    border-radius: 9999px;
+    border: 1.5px solid rgba(236, 72, 153, 0.35);
+    background-color: #ffffff;
+    padding: 0 10px 0 16px;
+    display: flex;
+    align-items: center;
+    transition: all 0.25s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.nav-search-box:focus-within {
+    border-color: #ec4899 !important;
+    background-color: #ffffff !important;
+    box-shadow: 0 0 15px rgba(236, 72, 153, 0.35) !important;
+}
+
+.nav-search-box .search-input {
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    color: #0f172a !important;
+    font-size: 0.85rem;
+    width: 100%;
+    padding: 6px 0;
+}
+
+.nav-search-box .search-input::placeholder {
+    color: #94a3b8;
+}
+
+.nav-search-box .search-btn {
+    background: transparent;
+    border: none;
+    color: #64748b;
+    padding: 4px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.nav-search-box:focus-within .search-btn,
+.nav-search-box .search-btn:hover {
+    color: #ec4899 !important;
+    transform: scale(1.08);
+}
+
+/* Dropdown Danh Mục Tối Giản */
+.category-dropdown-menu {
+    border-radius: 14px !important;
+    border: 1px solid rgba(236, 72, 153, 0.25) !important;
+    padding: 6px !important;
+    background-color: #ffffff !important;
+    box-shadow: 0 12px 30px rgba(236, 72, 153, 0.15) !important;
+    min-width: 180px;
+    width: max-content;
+    z-index: 1060 !important;
+}
+
+/* Hover to open menu on desktop without clicking */
+@media (min-width: 992px) {
+    .nav-item.dropdown:hover .category-dropdown-menu,
+    .nav-item.dropdown .category-dropdown-menu:hover {
+        display: block !important;
+        margin-top: 0;
+        animation: fadeInMenu 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .nav-item.dropdown:hover #categoryMegaMenuBtn {
+        color: var(--rose-primary) !important;
+    }
+    .category-dropdown-menu::before {
+        content: "";
+        position: absolute;
+        top: -14px;
+        left: 0;
+        right: 0;
+        height: 16px;
+    }
+}
+
+@keyframes fadeInMenu {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.category-dropdown-item {
+    color: #1e293b;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: all 0.18s ease;
+    white-space: nowrap;
+}
+
+.category-dropdown-item:hover {
+    background-color: rgba(236, 72, 153, 0.1);
+    color: #ec4899 !important;
+    padding-left: 20px;
+}
+
+.user-dropdown-menu,
+.dropdown-menu-dark,
+.navbar .dropdown-menu-end,
+.navbar .dropdown-menu:not(.category-dropdown-menu) {
+    border-radius: 20px !important;
+    overflow: hidden !important;
+    border: 1px solid rgba(236, 72, 153, 0.25) !important;
+    padding: 0.5rem !important;
+    background-color: #ffffff !important;
+    box-shadow: 0 15px 35px rgba(236, 72, 153, 0.15), 0 5px 15px rgba(0, 0, 0, 0.04) !important;
+    min-width: 220px !important;
+    z-index: 1050 !important;
+}
+
+.user-dropdown-menu .dropdown-item,
+.dropdown-menu-dark .dropdown-item,
+.navbar .dropdown-menu-end .dropdown-item,
+.navbar .dropdown-menu:not(.category-dropdown-menu) .dropdown-item {
+    color: #1e293b !important;
+    border-radius: 12px !important;
+    padding: 0.65rem 1rem !important;
+    transition: all 0.2s ease !important;
+    font-size: 0.88rem !important;
+    font-weight: 500 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+}
+
+.user-dropdown-menu .dropdown-item:hover,
+.dropdown-menu-dark .dropdown-item:hover,
+.navbar .dropdown-menu-end .dropdown-item:hover,
+.navbar .dropdown-menu:not(.category-dropdown-menu) .dropdown-item:hover {
+    background-color: rgba(236, 72, 153, 0.1) !important;
+    color: #ec4899 !important;
+    transform: translateX(4px);
+}
+
+.user-dropdown-menu .dropdown-item i,
+.dropdown-menu-dark .dropdown-item i,
+.navbar .dropdown-menu-end .dropdown-item i,
+.navbar .dropdown-menu:not(.category-dropdown-menu) .dropdown-item i {
+    font-size: 1.05rem !important;
+    line-height: 1 !important;
+}
+
+.user-dropdown-menu .dropdown-divider,
+.dropdown-menu-dark .dropdown-divider,
+.navbar .dropdown-menu-end .dropdown-divider,
+.navbar .dropdown-menu:not(.category-dropdown-menu) .dropdown-divider {
+    border-top: 1px solid rgba(236, 72, 153, 0.18) !important;
+    margin: 0.35rem 0.5rem !important;
+    opacity: 1 !important;
+}
+
+/* Admin Item in User Dropdown */
+.user-dropdown-menu .dropdown-item.text-warning,
+.navbar .dropdown-menu-end .dropdown-item.text-warning,
+.dropdown-menu-dark .dropdown-item.text-warning {
+    color: #f59e0b !important;
+}
+.user-dropdown-menu .dropdown-item.text-warning:hover,
+.navbar .dropdown-menu-end .dropdown-item.text-warning:hover,
+.dropdown-menu-dark .dropdown-item.text-warning:hover {
+    background-color: rgba(245, 158, 11, 0.12) !important;
+    color: #d97706 !important;
+}
+
+/* Logout Item in User Dropdown */
+.user-dropdown-menu .dropdown-item.text-danger,
+.navbar .dropdown-menu-end .dropdown-item.text-danger,
+.dropdown-menu-dark .dropdown-item.text-danger {
+    color: #ef4444 !important;
+}
+.user-dropdown-menu .dropdown-item.text-danger:hover,
+.navbar .dropdown-menu-end .dropdown-item.text-danger:hover,
+.dropdown-menu-dark .dropdown-item.text-danger:hover {
+    background-color: rgba(239, 68, 68, 0.1) !important;
+    color: #dc2626 !important;
+}
+
+.cart-badge {
+    background: linear-gradient(135deg, #ec4899, #e11d48);
+    color: #ffffff !important;
+    font-size: 0.75rem;
+    padding: 0.25em 0.6em;
+    border-radius: 9999px;
+    box-shadow: 0 2px 8px rgba(236, 72, 153, 0.5);
+    margin-left: 2px;
+}

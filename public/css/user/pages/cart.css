@@ -1,0 +1,99 @@
+/* Cart Page Styles */
+.cart-card {
+    background-color: #ffffff;
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(236, 72, 153, 0.25);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(236, 72, 153, 0.08);
+}
+
+.table-custom {
+    --bs-table-bg: transparent !important;
+    --bs-table-color: #1e293b !important;
+    color: #1e293b;
+    vertical-align: middle;
+}
+
+.table-custom th {
+    background-color: #f8fafc !important;
+    color: #475569 !important;
+    border-bottom: 1px solid rgba(236, 72, 153, 0.2);
+    padding: 0.85rem 0.5rem;
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.2px;
+    white-space: nowrap;
+}
+
+.table-custom td {
+    background-color: transparent !important;
+    color: #1e293b !important;
+    border-bottom: 1px solid rgba(236, 72, 153, 0.15);
+    padding: 0.85rem 0.5rem;
+}
+
+.table-custom tr {
+    background-color: transparent !important;
+}
+
+.btn-rose-submit {
+    background: linear-gradient(135deg, #ec4899 0%, #e11d48 100%);
+    color: #ffffff !important;
+    border: none;
+    padding: 0.85rem 1.5rem;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(236, 72, 153, 0.45);
+}
+
+.btn-rose-submit:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(236, 72, 153, 0.65);
+}
+
+.btn-rose-submit:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #94a3b8;
+    box-shadow: none;
+}
+
+/* Checkbox Custom Styling */
+.form-check-input {
+    width: 1.3rem;
+    height: 1.3rem;
+    cursor: pointer;
+    background-color: #ffffff;
+    border: 2px solid var(--rose-primary, #ec4899);
+    touch-action: manipulation;
+}
+
+.form-check-input:checked {
+    background-color: var(--rose-primary, #ec4899);
+    border-color: var(--rose-primary, #ec4899);
+}
+
+.qty-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 1px solid rgba(236, 72, 153, 0.3);
+    background-color: #f8fafc;
+    color: #0f172a;
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+    touch-action: manipulation;
+}
+
+.qty-btn:hover {
+    background-color: var(--rose-primary, #ec4899);
+    border-color: var(--rose-primary, #ec4899);
+    color: #ffffff !important;
+}

@@ -1,0 +1,48 @@
+/* User Orders Styling */
+.order-card {
+    background-color: #ffffff;
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(236, 72, 153, 0.22);
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(236, 72, 153, 0.06);
+    transition: all 0.25s ease;
+}
+
+.order-card:hover {
+    border-color: rgba(236, 72, 153, 0.5);
+    box-shadow: 0 12px 30px rgba(236, 72, 153, 0.15);
+}
+
+.btn-momo-pay {
+    background: linear-gradient(135deg, #a50064 0%, #d81b60 100%);
+    color: #ffffff !important;
+    border: none;
+    padding: 0.5rem 1.2rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+    box-shadow: 0 4px 15px rgba(165, 0, 100, 0.4);
+}
+
+.btn-momo-pay:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(165, 0, 100, 0.6);
+}
+
+.btn-detail {
+    background-color: #ffffff;
+    color: #0f172a !important;
+    border: 1px solid rgba(236, 72, 153, 0.3);
+    border-radius: 12px;
+    padding: 0.5rem 1.1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.btn-detail:hover {
+    background-color: #fdf2f8;
+    border-color: var(--rose-primary, #ec4899);
+    color: var(--rose-primary, #ec4899) !important;
+}
