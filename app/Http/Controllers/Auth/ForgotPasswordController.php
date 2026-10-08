@@ -23,7 +23,7 @@ class ForgotPasswordController extends Controller
                 ? redirect()->route('admin.dashboard')
                 : redirect()->route('home');
         }
-        return view('Auth.forgot_password');
+        return view('auth.forgot_password');
     }
 
     /**
@@ -80,7 +80,7 @@ class ForgotPasswordController extends Controller
                 ->with('error', 'Phiên khôi phục mật khẩu không hợp lệ hoặc đã hết hạn. Vui lòng gửi lại yêu cầu mới.');
         }
 
-        return view('Auth.reset_password');
+        return view('auth.reset_password');
     }
 
     /**
