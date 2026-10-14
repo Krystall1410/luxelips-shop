@@ -14,6 +14,7 @@ use App\Http\Controllers\User\MomoController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\User\WishlistController;
 use App\Http\Controllers\User\ChatController as UserChatController;
 use App\Http\Controllers\Admin\ChatController as AdminChatController;
@@ -107,6 +108,10 @@ Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'
 Route::post('/resend-reset-otp', [ForgotPasswordController::class, 'resendOtp'])->name('password.resend_otp');
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+// Google Social Authentication Routes
+Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('auth.google');
+Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback'])->name('auth.google.callback');
 
 /*
 |--------------------------------------------------------------------------

@@ -2,6 +2,19 @@
 
 @section('title', $product->name . ' | LuxeLips PRO')
 
+@section('meta')
+<meta property="og:type" content="product">
+<meta property="og:title" content="{{ $product->name }} | LuxeLips PRO">
+<meta property="og:description" content="{{ Str::limit($product->description ?: 'Khám phá son môi cao cấp chính hãng tại LuxeLips', 150) }}">
+<meta property="og:image" content="{{ $product->first_image_url ?: asset('images/logo.png') }}">
+<meta property="og:url" content="{{ url()->current() }}">
+<meta property="og:site_name" content="LuxeLips PRO">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ $product->name }} | LuxeLips PRO">
+<meta name="twitter:description" content="{{ Str::limit($product->description ?: 'Khám phá son môi cao cấp chính hãng tại LuxeLips', 150) }}">
+<meta name="twitter:image" content="{{ $product->first_image_url ?: asset('images/logo.png') }}">
+@endsection
+
 @push('styles')
 <link rel="stylesheet" href="{{ asset('css/user/pages/product-detail.css') }}">
 @endpush
@@ -189,6 +202,54 @@
                         <div class="col-sm-4 d-flex align-items-center gap-2">
                             <i class="bi bi-arrow-counterclockwise text-warning fs-5"></i>
                             <span>Đổi trả trong 7 ngày</span>
+                        </div>
+                    </div>
+
+                    <!-- Cụm Chia sẻ Mạng Xã Hội (Social Sharing) -->
+                    <div class="pt-3 mt-3 border-top border-secondary d-flex align-items-center justify-content-between flex-wrap gap-2">
+                        <span class="fs-8 fw-semibold text-muted d-flex align-items-center gap-1.5">
+                            <i class="bi bi-share-fill" style="color: #ec4899;"></i> Chia sẻ sản phẩm:
+                        </span>
+                        <div class="d-flex align-items-center gap-2">
+                            <!-- Facebook Share -->
+                            <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}" 
+                               target="_blank" 
+                               rel="noopener noreferrer" 
+                               class="btn btn-sm rounded-circle d-flex align-items-center justify-content-center shadow-sm text-white" 
+                               style="width: 34px; height: 34px; background: #1877F2; text-decoration: none;" 
+                               title="Chia sẻ lên Facebook">
+                                <i class="bi bi-facebook fs-6"></i>
+                            </a>
+
+                            <!-- Zalo Share -->
+                            <a href="https://sp.zalo.me/plugins/share?url={{ urlencode(url()->current()) }}" 
+                               target="_blank" 
+                               rel="noopener noreferrer" 
+                               class="btn btn-sm rounded-circle d-flex align-items-center justify-content-center shadow-sm text-white" 
+                               style="width: 34px; height: 34px; background: #0068FF; font-weight: 800; font-size: 0.72rem; text-decoration: none;" 
+                               title="Chia sẻ qua Zalo">
+                                <span style="font-family: sans-serif;">Zalo</span>
+                            </a>
+
+                            <!-- Twitter / X Share -->
+                            <a href="https://twitter.com/intent/tweet?url={{ urlencode(url()->current()) }}&text={{ urlencode('Khám phá son môi cao cấp ' . $product->name . ' tại LuxeLips PRO!') }}" 
+                               target="_blank" 
+                               rel="noopener noreferrer" 
+                               class="btn btn-sm rounded-circle d-flex align-items-center justify-content-center shadow-sm text-white" 
+                               style="width: 34px; height: 34px; background: #000000; text-decoration: none;" 
+                               title="Chia sẻ lên X (Twitter)">
+                                <i class="bi bi-twitter-x fs-6"></i>
+                            </a>
+
+                            <!-- Copy Link -->
+                            <button type="button" 
+                                    class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1 fs-8 d-flex align-items-center gap-1.5 shadow-sm" 
+                                    style="height: 34px; border-color: #cbd5e1; color: #475569;" 
+                                    onclick="copyProductLink()" 
+                                    title="Sao chép liên kết sản phẩm">
+                                <i class="bi bi-link-45deg fs-6"></i>
+                                <span>Sao chép link</span>
+                            </button>
                         </div>
                     </div>
 
@@ -391,4 +452,40 @@
 
 @push('scripts')
 <script src="{{ asset('js/user/pages/product-detail.js') }}"></script>
+<script>
+function copyProductLink() {
+    const url = window.location.href;
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(url).then(function() {
+            if (window.showToast) {
+                window.showToast('Đã sao chép liên kết sản phẩm vào bộ nhớ tạm!', 'success');
+            } else {
+                alert('Đã sao chép liên kết sản phẩm!');
+            }
+        }).catch(function() {
+            fallbackCopyText(url);
+        });
+    } else {
+        fallbackCopyText(url);
+    }
+}
+
+function fallbackCopyText(text) {
+    const tempInput = document.createElement('input');
+    tempInput.value = text;
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    try {
+        document.execCommand('copy');
+        if (window.showToast) {
+            window.showToast('Đã sao chép liên kết sản phẩm vào bộ nhớ tạm!', 'success');
+        } else {
+            alert('Đã sao chép liên kết sản phẩm!');
+        }
+    } catch (err) {
+        prompt('Sao chép liên kết tại đây:', text);
+    }
+    document.body.removeChild(tempInput);
+}
+</script>
 @endpush
