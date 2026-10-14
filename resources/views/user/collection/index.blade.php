@@ -3,7 +3,7 @@
 @section('title', 'Bộ Sưu Tập Mỹ Phẩm & Son Môi Cao Cấp | LuxeLips PRO')
 
 @push('styles')
-<link rel="stylesheet" href="{{ asset('css/user/pages/collection.css') }}">
+<link rel="stylesheet" href="{{ asset('css/user/pages/collection.css') }}?v={{ time() }}">
 @endpush
 
 @section('content')
@@ -150,21 +150,22 @@
                 $minVariantPrice = $product->variants->min('effective_price') ?: $product->original_price;
                 $isOutOfStock = ($product->total_stock <= 0);
                 @endphp
-                <div class="col position-relative">
-                    @php
-                        $isFav = Auth::check() && $product->isFavoritedBy(Auth::user());
-                    @endphp
-                    <button type="button" 
-                            class="btn btn-sm rounded-circle position-absolute top-0 end-0 m-3 z-3 shadow-sm border-0 d-flex align-items-center justify-content-center btn-wishlist-toggle {{ $isFav ? 'active favorited' : '' }}" 
-                            style="width: 32px; height: 32px; background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(4px);"
-                            data-wishlist-product-id="{{ $product->id }}"
-                            onclick="event.preventDefault(); event.stopPropagation(); window.toggleWishlist({{ $product->id }}, this);"
-                            title="{{ $isFav ? 'Bỏ khỏi yêu thích' : 'Thêm vào yêu thích' }}">
-                        <i class="bi {{ $isFav ? 'bi-heart-fill text-danger' : 'bi-heart text-muted' }} fs-7"></i>
-                    </button>
-                    <a href="{{ route('products.show', $product->slug ?: $product->id) }}" class="cocolux-card {{ $isOutOfStock ? 'is-out-of-stock' : '' }}">
-                        <!-- Image Wrap -->
-                        <div class="cocolux-card-img-wrap">
+                <div class="col">
+                    <div class="cocolux-card {{ $isOutOfStock ? 'is-out-of-stock' : '' }} position-relative">
+                        <!-- Floating Wishlist Button -->
+                        @php
+                            $isFav = Auth::check() && $product->isFavoritedBy(Auth::user());
+                        @endphp
+                        <button type="button" 
+                                class="btn btn-sm rounded-circle shadow-sm border-0 d-flex align-items-center justify-content-center btn-wishlist-toggle {{ $isFav ? 'active favorited' : '' }}" 
+                                data-wishlist-product-id="{{ $product->id }}"
+                                onclick="event.preventDefault(); event.stopPropagation(); window.toggleWishlist({{ $product->id }}, this);"
+                                title="{{ $isFav ? 'Bỏ khỏi yêu thích' : 'Thêm vào yêu thích' }}">
+                            <i class="bi {{ $isFav ? 'bi-heart-fill text-danger' : 'bi-heart text-muted' }} fs-6" style="pointer-events: none;"></i>
+                        </button>
+
+                        <!-- Image Wrap linking to detail -->
+                        <a href="{{ route('products.show', $product->slug ?: $product->id) }}" class="cocolux-card-img-wrap text-decoration-none">
                             @if($isOutOfStock)
                             <span class="badge-out-of-stock"><i class="bi bi-slash-circle me-1"></i>HẾT HÀNG</span>
                             @else
@@ -174,12 +175,14 @@
                             <span class="badge-hot-tag">{{ $product->variants->count() }} màu</span>
                             @endif
                             <img src="{{ $thumbImage }}" alt="{{ $product->name }}" class="cocolux-card-img" loading="lazy">
-                        </div>
+                        </a>
 
                         <!-- Content -->
                         <div class="cocolux-card-body">
                             <span class="cocolux-brand">{{ $categoryName }}</span>
-                            <h6 class="cocolux-title" title="{{ $product->name }}">{{ $product->name }}</h6>
+                            <a href="{{ route('products.show', $product->slug ?: $product->id) }}" class="text-decoration-none">
+                                <h6 class="cocolux-title" title="{{ $product->name }}">{{ $product->name }}</h6>
+                            </a>
 
                             <div class="d-flex align-items-baseline mb-2">
                                 <span class="cocolux-price">{{ number_format($minVariantPrice, 0, ',', '.') }}₫</span>
@@ -203,7 +206,7 @@
                                 </span>
                             </div>
                         </div>
-                    </a>
+                    </div>
                 </div>
                 @endforeach
             </div>
