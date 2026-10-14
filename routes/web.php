@@ -14,6 +14,7 @@ use App\Http\Controllers\User\MomoController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\User\WishlistController;
 use App\Http\Controllers\User\ChatController as UserChatController;
 use App\Http\Controllers\Admin\ChatController as AdminChatController;
 
@@ -73,6 +74,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/chat/send', [UserChatController::class, 'send'])->name('user.chat.send');
     Route::get('/chat/messages', [UserChatController::class, 'getMessages'])->name('user.chat.messages');
     Route::get('/chat/unread-count', [UserChatController::class, 'unreadCount'])->name('user.chat.unread_count');
+
+    // Wishlist Routes
+    Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
+    Route::post('/wishlist/{product}/toggle', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
+    Route::delete('/wishlist/{product}', [WishlistController::class, 'destroy'])->name('wishlist.destroy');
+    Route::get('/wishlist/count', [WishlistController::class, 'count'])->name('wishlist.count');
 });
 
 /*

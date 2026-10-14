@@ -95,4 +95,17 @@ class Product extends Model
         }
         return number_format($min, 0, ',', '.') . ' ₫ - ' . number_format($max, 0, ',', '.') . ' ₫';
     }
+
+    public function wishlists(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Wishlist::class);
+    }
+
+    public function isFavoritedBy(?User $user): bool
+    {
+        if (!$user) {
+            return false;
+        }
+        return $this->wishlists()->where('user_id', $user->id)->exists();
+    }
 }

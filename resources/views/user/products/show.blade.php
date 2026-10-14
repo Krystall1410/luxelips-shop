@@ -153,14 +153,25 @@
                         <input type="hidden" name="variant_id" id="form-variant-id" value="{{ $firstVariant ? $firstVariant->id : '' }}">
                         <input type="hidden" name="quantity" id="form-quantity" value="1">
 
-                        <div class="d-flex flex-column flex-sm-row gap-3">
-                            <button type="button" class="btn-add-cart-main {{ $defaultStock <= 0 ? 'disabled' : '' }}" id="btn-add-cart" @disabled($defaultStock <= 0)>
+                        <div class="d-flex flex-column flex-sm-row gap-3 align-items-stretch">
+                            <button type="button" class="btn-add-cart-main flex-grow-1 {{ $defaultStock <= 0 ? 'disabled' : '' }}" id="btn-add-cart" @disabled($defaultStock <= 0)>
                                 <i class="bi {{ $defaultStock <= 0 ? 'bi-slash-circle' : 'bi-cart-plus-fill' }} fs-5" id="btn-add-cart-icon"></i>
                                 <span id="btn-add-cart-text">{{ $defaultStock <= 0 ? 'Tạm Hết Hàng' : 'Thêm Vào Giỏ Hàng' }}</span>
                             </button>
-                            <button type="button" class="btn-buy-now-main {{ $defaultStock <= 0 ? 'disabled' : '' }}" id="btn-buy-now" @disabled($defaultStock <= 0)>
-                                <i class="bi {{ $defaultStock <= 0 ? 'bi-slash-circle' : 'bi-cart-plus-fill' }} fs-5" id="btn-buy-now-icon"></i>
+                            <button type="button" class="btn-buy-now-main flex-grow-1 {{ $defaultStock <= 0 ? 'disabled' : '' }}" id="btn-buy-now" @disabled($defaultStock <= 0)>
+                                <i class="bi {{ $defaultStock <= 0 ? 'bi-slash-circle' : 'bi-lightning-charge-fill' }} fs-5" id="btn-buy-now-icon"></i>
                                 <span>Mua Ngay</span>
+                            </button>
+                            @php
+                                $isFav = Auth::check() && $product->isFavoritedBy(Auth::user());
+                            @endphp
+                            <button type="button" 
+                                    class="btn rounded-3 d-flex align-items-center justify-content-center px-3 btn-wishlist-toggle {{ $isFav ? 'active favorited' : '' }}" 
+                                    style="border: 2px solid #ec4899; color: {{ $isFav ? '#ffffff' : '#ec4899' }}; background: {{ $isFav ? '#e11d48' : '#fff0f5' }}; min-width: 48px;"
+                                    data-wishlist-product-id="{{ $product->id }}"
+                                    onclick="window.toggleWishlist({{ $product->id }}, this);"
+                                    title="{{ $isFav ? 'Bỏ khỏi yêu thích' : 'Lưu vào yêu thích' }}">
+                                <i class="bi {{ $isFav ? 'bi-heart-fill' : 'bi-heart' }} fs-5"></i>
                             </button>
                         </div>
                     </form>

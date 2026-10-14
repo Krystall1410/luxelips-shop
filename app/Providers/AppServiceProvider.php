@@ -38,6 +38,13 @@ class AppServiceProvider extends ServiceProvider
                     ->orderBy('name')
                     ->get());
             }
+
+            if (!$view->offsetExists('wishlistCount')) {
+                $count = \Illuminate\Support\Facades\Auth::check()
+                    ? \App\Models\Wishlist::where('user_id', \Illuminate\Support\Facades\Auth::id())->count()
+                    : 0;
+                $view->with('wishlistCount', $count);
+            }
         });
     }
 }

@@ -150,7 +150,18 @@
                 $minVariantPrice = $product->variants->min('effective_price') ?: $product->original_price;
                 $isOutOfStock = ($product->total_stock <= 0);
                 @endphp
-                <div class="col">
+                <div class="col position-relative">
+                    @php
+                        $isFav = Auth::check() && $product->isFavoritedBy(Auth::user());
+                    @endphp
+                    <button type="button" 
+                            class="btn btn-sm rounded-circle position-absolute top-0 end-0 m-3 z-3 shadow-sm border-0 d-flex align-items-center justify-content-center btn-wishlist-toggle {{ $isFav ? 'active favorited' : '' }}" 
+                            style="width: 32px; height: 32px; background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(4px);"
+                            data-wishlist-product-id="{{ $product->id }}"
+                            onclick="event.preventDefault(); event.stopPropagation(); window.toggleWishlist({{ $product->id }}, this);"
+                            title="{{ $isFav ? 'Bỏ khỏi yêu thích' : 'Thêm vào yêu thích' }}">
+                        <i class="bi {{ $isFav ? 'bi-heart-fill text-danger' : 'bi-heart text-muted' }} fs-7"></i>
+                    </button>
                     <a href="{{ route('products.show', $product->slug ?: $product->id) }}" class="cocolux-card {{ $isOutOfStock ? 'is-out-of-stock' : '' }}">
                         <!-- Image Wrap -->
                         <div class="cocolux-card-img-wrap">

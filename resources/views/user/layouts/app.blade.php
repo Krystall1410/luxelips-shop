@@ -86,6 +86,12 @@
                         </div>
                     </form>
 
+                    <!-- Nút Danh Sách Yêu Thích -->
+                    <a href="{{ route('wishlist.index') }}" class="btn nav-header-btn rounded-circle d-flex align-items-center justify-content-center position-relative" style="width: 38px; height: 38px; padding: 0 !important; flex-shrink: 0;" id="wishlist-nav-btn" title="Danh Sách Yêu Thích">
+                        <i class="bi bi-heart fs-5 text-danger"></i>
+                        <span class="cart-badge badge position-absolute top-0 start-100 translate-middle wishlist-count-badge {{ ($wishlistCount ?? 0) > 0 ? '' : 'd-none' }}" id="wishlist-count-badge" style="background: #e11d48; color: #ffffff !important;">{{ $wishlistCount ?? 0 }}</span>
+                    </a>
+
                     <!-- Nút Giỏ Hàng -->
                     @php
                         $cart = session()->get('cart', []);
@@ -115,6 +121,11 @@
                             <li>
                                 <a class="dropdown-item py-2" href="{{ route('profile.index') }}">
                                     <i class="bi bi-person-gear me-2 text-pink" style="color: #ec4899;"></i>Thông tin tài khoản
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item py-2" href="{{ route('wishlist.index') }}">
+                                    <i class="bi bi-heart me-2 text-danger"></i>Sản phẩm yêu thích
                                 </a>
                             </li>
                             <li>

@@ -67,6 +67,86 @@ window.updateCartBadgeCount = function (count) {
     });
 };
 
+// Global Wishlist Badge Count Updater
+window.updateWishlistBadgeCount = function (count) {
+    const badges = document.querySelectorAll('.wishlist-count-badge');
+    badges.forEach(badge => {
+        badge.innerText = count;
+        if (count > 0) {
+            badge.classList.remove('d-none');
+        } else {
+            badge.classList.add('d-none');
+        }
+    });
+};
+
+// Global Wishlist Toggle Action
+window.toggleWishlist = function (productId, btn) {
+    const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
+    const csrfToken = csrfTokenMeta ? csrfTokenMeta.getAttribute('content') : '';
+
+    if (btn) {
+        btn.disabled = true;
+        btn.style.opacity = '0.6';
+    }
+
+    fetch(`/wishlist/${productId}/toggle`, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': csrfToken,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(res => {
+        if (res.status === 401) {
+            window.location.href = '/login';
+            return;
+        }
+        return res.json();
+    })
+    .then(data => {
+        if (!data) return;
+
+        if (data.success) {
+            window.updateWishlistBadgeCount(data.count);
+
+            // Update all button states for this product on current page
+            const btns = document.querySelectorAll(`[data-wishlist-product-id="${productId}"]`);
+            btns.forEach(b => {
+                const icon = b.querySelector('i');
+                if (data.is_favorited) {
+                    b.classList.add('active', 'favorited');
+                    if (icon) {
+                        icon.className = 'bi bi-heart-fill text-danger';
+                    }
+                    b.setAttribute('title', 'Bỏ khỏi yêu thích');
+                } else {
+                    b.classList.remove('active', 'favorited');
+                    if (icon) {
+                        icon.className = 'bi bi-heart text-muted';
+                    }
+                    b.setAttribute('title', 'Thêm vào yêu thích');
+                }
+            });
+
+            window.showToast(data.message, data.is_favorited ? 'success' : 'info');
+        } else if (data.message) {
+            window.showToast(data.message, 'warning');
+        }
+    })
+    .catch(err => {
+        console.error('Error toggling wishlist:', err);
+        window.showToast('Có lỗi xảy ra khi cập nhật yêu thích.', 'error');
+    })
+    .finally(() => {
+        if (btn) {
+            btn.disabled = false;
+            btn.style.opacity = '1';
+        }
+    });
+};
+
 document.addEventListener("DOMContentLoaded", function () {
     // Auto fade out flash alerts after 5 seconds
     const alerts = document.querySelectorAll('.alert-dismissible');

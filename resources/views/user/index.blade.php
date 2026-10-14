@@ -172,6 +172,19 @@
             <div class="col-md-6 col-lg-3 product-item-col" data-category-id="{{ $catId }}">
                 <div class="card-product h-100 p-3 d-flex flex-column {{ $isOutOfStock ? 'is-out-of-stock' : '' }}">
 
+                    <!-- Floating Wishlist Button -->
+                    @php
+                        $isFav = Auth::check() && $product->isFavoritedBy(Auth::user());
+                    @endphp
+                    <button type="button" 
+                            class="btn btn-sm rounded-circle position-absolute top-0 end-0 m-2 z-3 shadow-sm border-0 d-flex align-items-center justify-content-center btn-wishlist-toggle {{ $isFav ? 'active favorited' : '' }}" 
+                            style="width: 34px; height: 34px; background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(4px);"
+                            data-wishlist-product-id="{{ $product->id }}"
+                            onclick="event.preventDefault(); event.stopPropagation(); window.toggleWishlist({{ $product->id }}, this);"
+                            title="{{ $isFav ? 'Bỏ khỏi yêu thích' : 'Thêm vào yêu thích' }}">
+                        <i class="bi {{ $isFav ? 'bi-heart-fill text-danger' : 'bi-heart text-muted' }} fs-6"></i>
+                    </button>
+
                     <!-- Image Wrapper linking to detail -->
                     <a href="{{ route('products.show', $product->slug ?? $product->id) }}" class="text-decoration-none">
                         <div class="product-img-wrapper mb-3">
@@ -182,12 +195,14 @@
                                 <i class="bi bi-image fs-1"></i>
                             </div>
                             @endif
-                            <span class="position-absolute top-0 end-0 badge m-2 rounded-pill shadow-sm" style="background: rgba(236,72,153,0.92); color: #ffffff !important; backdrop-filter: blur(4px); font-weight: 600;">
-                                {{ $product->variants->count() }} màu sắc
-                            </span>
+                            
                             @if($isOutOfStock)
                             <span class="position-absolute top-0 start-0 badge m-2 rounded-pill badge-out-of-stock-home text-white shadow-sm">
                                 <i class="bi bi-slash-circle me-1"></i>Hết hàng
+                            </span>
+                            @else
+                            <span class="position-absolute top-0 start-0 badge m-2 rounded-pill shadow-sm" style="background: rgba(236,72,153,0.92); color: #ffffff !important; backdrop-filter: blur(4px); font-weight: 600;">
+                                {{ $product->variants->count() }} màu sắc
                             </span>
                             @endif
                         </div>
