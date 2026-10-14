@@ -13,11 +13,26 @@ use Laravel\Socialite\Facades\Socialite;
 class GoogleController extends Controller
 {
     /**
+     * Get redirect URL matching current request host and scheme.
+     */
+    protected function getRedirectUrl(): string
+    {
+        $envUri = env('GOOGLE_REDIRECT_URI');
+        if (!empty($envUri) && !str_contains($envUri, '${APP_URL}') && !app()->isLocal()) {
+            return $envUri;
+        }
+
+        return url('/auth/google/callback');
+    }
+
+    /**
      * Redirect the user to the Google authentication page.
      */
     public function redirectToGoogle()
     {
-        return Socialite::driver('google')->redirect();
+        return Socialite::driver('google')
+            ->redirectUrl($this->getRedirectUrl())
+            ->redirect();
     }
 
     /**
@@ -27,7 +42,9 @@ class GoogleController extends Controller
     {
         try {
             /** @var \Laravel\Socialite\Two\User $googleUser */
-            $googleUser = Socialite::driver('google')->user();
+            $googleUser = Socialite::driver('google')
+                ->redirectUrl($this->getRedirectUrl())
+                ->user();
         } catch (\Throwable $e) {
             Log::error('Google OAuth callback failed: ' . $e->getMessage(), [
                 'exception' => $e,
