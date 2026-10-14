@@ -100,13 +100,24 @@ window.toggleWishlist = function (productId, btn) {
     })
     .then(res => {
         if (res.status === 401) {
-            window.location.href = '/login';
-            return;
+            window.showToast('Vui lòng đăng nhập để lưu sản phẩm vào danh sách yêu thích.', 'warning');
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 1000);
+            return null;
         }
         return res.json();
     })
     .then(data => {
         if (!data) return;
+
+        if (data.require_auth) {
+            window.showToast(data.message || 'Vui lòng đăng nhập để lưu sản phẩm vào danh sách yêu thích.', 'warning');
+            setTimeout(() => {
+                window.location.href = data.redirect || '/login';
+            }, 1200);
+            return;
+        }
 
         if (data.success) {
             window.updateWishlistBadgeCount(data.count);

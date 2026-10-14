@@ -39,6 +39,10 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/bo-suu-tap', [HomeController::class, 'collection'])->name('collection.index');
 Route::get('/san-pham/{product}', [HomeController::class, 'show'])->name('products.show');
 
+// Public Wishlist API Routes (Handles guest prompt gracefully)
+Route::post('/wishlist/{product}/toggle', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
+Route::get('/wishlist/count', [WishlistController::class, 'count'])->name('wishlist.count');
+
 // Shopping Cart & Checkout Routes (Protected by Auth Middleware)
 Route::middleware(['auth'])->group(function () {
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
@@ -75,11 +79,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/chat/messages', [UserChatController::class, 'getMessages'])->name('user.chat.messages');
     Route::get('/chat/unread-count', [UserChatController::class, 'unreadCount'])->name('user.chat.unread_count');
 
-    // Wishlist Routes
+    // Wishlist Routes (User's private saved items)
     Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
-    Route::post('/wishlist/{product}/toggle', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
     Route::delete('/wishlist/{product}', [WishlistController::class, 'destroy'])->name('wishlist.destroy');
-    Route::get('/wishlist/count', [WishlistController::class, 'count'])->name('wishlist.count');
 });
 
 /*

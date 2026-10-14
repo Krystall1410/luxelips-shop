@@ -33,12 +33,16 @@ class WishlistController extends Controller
     public function toggle(Request $request, Product $product)
     {
         if (!Auth::check()) {
-            return response()->json([
-                'success' => false,
-                'require_auth' => true,
-                'message' => 'Vui lòng đăng nhập để lưu sản phẩm vào danh sách yêu thích.',
-                'redirect' => route('login'),
-            ], 401);
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'require_auth' => true,
+                    'message' => 'Vui lòng đăng nhập để lưu sản phẩm vào danh sách yêu thích.',
+                    'redirect' => route('login'),
+                ], 200);
+            }
+
+            return redirect()->route('login')->with('warning', 'Vui lòng đăng nhập để lưu sản phẩm vào danh sách yêu thích.');
         }
 
         $user = Auth::user();

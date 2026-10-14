@@ -199,7 +199,88 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Shared Client Main JS -->
-    <script src="{{ asset('js/user/main.js') }}"></script>
+    <script src="{{ asset('js/user/main.js') }}?v={{ time() }}"></script>
+
+    <!-- Immediate Inline Wishlist Handler to guarantee zero browser caching lag -->
+    <script>
+    (function () {
+        window.toggleWishlist = function (productId, btn) {
+            const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
+            const csrfToken = csrfTokenMeta ? csrfTokenMeta.getAttribute('content') : '';
+
+            if (btn) {
+                btn.disabled = true;
+                btn.style.opacity = '0.6';
+            }
+
+            fetch('/wishlist/' + productId + '/toggle', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(function (res) {
+                if (res.status === 401) {
+                    if (window.showToast) window.showToast('Vui lòng đăng nhập để lưu sản phẩm vào danh sách yêu thích.', 'warning');
+                    setTimeout(function () { window.location.href = '/login'; }, 1000);
+                    return null;
+                }
+                return res.json();
+            })
+            .then(function (data) {
+                if (!data) return;
+
+                if (data.require_auth) {
+                    if (window.showToast) {
+                        window.showToast(data.message || 'Vui lòng đăng nhập để lưu sản phẩm vào danh sách yêu thích.', 'warning');
+                    } else {
+                        alert(data.message);
+                    }
+                    setTimeout(function () { window.location.href = data.redirect || '/login'; }, 1200);
+                    return;
+                }
+
+                if (data.success) {
+                    if (window.updateWishlistBadgeCount) {
+                        window.updateWishlistBadgeCount(data.count);
+                    }
+
+                    var btns = document.querySelectorAll('[data-wishlist-product-id="' + productId + '"]');
+                    btns.forEach(function (b) {
+                        var icon = b.querySelector('i');
+                        if (data.is_favorited) {
+                            b.classList.add('active', 'favorited');
+                            if (icon) icon.className = 'bi bi-heart-fill text-danger';
+                            b.setAttribute('title', 'Bỏ khỏi yêu thích');
+                        } else {
+                            b.classList.remove('active', 'favorited');
+                            if (icon) icon.className = 'bi bi-heart text-muted';
+                            b.setAttribute('title', 'Thêm vào yêu thích');
+                        }
+                    });
+
+                    if (window.showToast) {
+                        window.showToast(data.message, data.is_favorited ? 'success' : 'info');
+                    }
+                } else if (data.message && window.showToast) {
+                    window.showToast(data.message, 'warning');
+                }
+            })
+            .catch(function (err) {
+                console.error('Error toggling wishlist:', err);
+                if (window.showToast) window.showToast('Có lỗi xảy ra khi cập nhật yêu thích.', 'error');
+            })
+            .finally(function () {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.style.opacity = '1';
+                }
+            });
+        };
+    })();
+    </script>
 
     @stack('scripts')
 </body>
