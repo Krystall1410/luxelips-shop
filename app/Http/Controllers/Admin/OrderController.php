@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
@@ -68,21 +69,57 @@ class OrderController extends Controller
     }
 
     /**
-     * Update order status & shipping status.
+     * Update order status & shipping status, syncing payment transactions automatically.
      */
     public function update(Request $request, Order $order)
     {
         $request->validate([
-            'status' => 'required|string|in:pending,paid,cod_ordered,failed,cancelled,completed',
+            'status' => 'required|string|in:pending,paid,cod_ordered,cod_paid,failed,cancelled,completed',
             'shipping_status' => 'required|string|in:pending,ready_to_pick,delivering,delivered,cancelled',
         ]);
 
-        $order->update([
-            'status' => $request->status,
-            'shipping_status' => $request->shipping_status,
-        ]);
+        DB::transaction(function () use ($request, $order) {
+            $order->update([
+                'status' => $request->status,
+                'shipping_status' => $request->shipping_status,
+            ]);
 
-        return redirect()->back()->with('success', "Đã cập nhật trạng thái Đơn Hàng #{$order->id} thành công!");
+            // Synchronize with payment_transactions table (Order is primary source of truth)
+            $targetPaymentStatus = match ($request->status) {
+                'paid', 'completed', 'cod_paid' => 'paid',
+                'failed' => 'failed',
+                'cancelled' => 'cancelled',
+                default => 'pending', // 'pending', 'cod_ordered'
+            };
+
+            $latestPayment = $order->paymentTransactions()->latest('id')->first();
+            $adminName = auth()->check() ? 'Admin #' . auth()->id() : 'Quản trị viên';
+
+            if ($latestPayment) {
+                $updateData = [
+                    'status' => $targetPaymentStatus,
+                    'message' => "Đồng bộ từ cập nhật Đơn hàng #{$order->id} ({$request->status}) bởi {$adminName}",
+                ];
+
+                if ($targetPaymentStatus === 'paid') {
+                    $updateData['paid_at'] = $latestPayment->paid_at ?? now();
+                } elseif ($targetPaymentStatus === 'pending') {
+                    $updateData['paid_at'] = null;
+                }
+
+                $latestPayment->update($updateData);
+            } else {
+                $order->paymentTransactions()->create([
+                    'gateway' => $order->payment_method ?: 'cod',
+                    'amount' => $order->total_price,
+                    'status' => $targetPaymentStatus,
+                    'paid_at' => ($targetPaymentStatus === 'paid') ? now() : null,
+                    'message' => "Tự động tạo giao dịch khi cập nhật Đơn hàng #{$order->id} ({$request->status}) bởi {$adminName}",
+                ]);
+            }
+        });
+
+        return redirect()->back()->with('success', "Đã cập nhật trạng thái Đơn Hàng #{$order->id} và tự động đồng bộ giao dịch thanh toán thành công!");
     }
 
     /**

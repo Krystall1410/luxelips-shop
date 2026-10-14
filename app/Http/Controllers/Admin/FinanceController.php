@@ -46,7 +46,7 @@ class FinanceController extends Controller
             $join->on('payment.order_id', '=', 'orders.id')->where('payment.id', '=', $paymentId);
         })->select('orders.*', 'payment.id as payment_id', 'payment.paid_at')
             ->selectRaw("COALESCE(payment.gateway, CASE WHEN orders.status IN ('cod_ordered', 'cod_paid') THEN 'cod' WHEN orders.status IN ('paid', 'paid_momo') THEN 'momo' ELSE orders.payment_method END) as gateway")
-            ->selectRaw("COALESCE(payment.status, CASE WHEN orders.status = 'cod_ordered' THEN 'pending' WHEN orders.status IN ('cod_paid', 'paid_momo') THEN 'paid' ELSE orders.status END) as payment_status");
+            ->selectRaw("COALESCE(payment.status, CASE WHEN orders.status IN ('cod_ordered', 'pending') THEN 'pending' WHEN orders.status IN ('cod_paid', 'paid_momo', 'paid', 'completed') THEN 'paid' ELSE orders.status END) as payment_status");
 
         return DB::query()->fromSub($orders, 'finance_orders');
     }
@@ -178,9 +178,9 @@ class FinanceController extends Controller
                 throw ValidationException::withMessages(['payment_status' => 'Chỉ được cập nhật thủ công cho đơn COD.']);
             }
 
-            $currentStatus = $payment?->status ?? ($order->status === 'cod_paid' ? 'paid' : 'pending');
-            if ($currentStatus !== $data['current_payment_status'] || $order->status !== $data['current_order_status'] || (int) ($payment?->id ?? 0) !== (int) $data['current_payment_id']) {
-                throw ValidationException::withMessages(['payment_status' => 'Đơn hàng vừa thay đổi. Vui lòng tải lại trang trước khi cập nhật.']);
+            $currentStatus = $payment?->status ?? (in_array($order->status, ['cod_paid', 'paid', 'completed'], true) ? 'paid' : 'pending');
+            if ($currentStatus !== $data['current_payment_status']) {
+                throw ValidationException::withMessages(['payment_status' => 'Trạng thái thanh toán của đơn hàng vừa thay đổi. Vui lòng tải lại trang trước khi cập nhật.']);
             }
 
             $newStatus = $data['payment_status'];
@@ -212,7 +212,7 @@ class FinanceController extends Controller
             }
 
             if ($newStatus === 'paid') {
-                $order->update(['status' => 'cod_paid']);
+                $order->update(['status' => ($order->status === 'completed' ? 'completed' : 'paid')]);
             } elseif (in_array($newStatus, ['pending', 'failed'], true)) {
                 $order->update(['status' => 'cod_ordered']);
             }

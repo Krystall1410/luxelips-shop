@@ -148,7 +148,7 @@
                     <span class="fs-8 d-block mb-1 text-muted">Trạng thái thanh toán:</span>
                     @if($order->status === 'paid')
                         <span class="badge bg-success fs-8 px-3 py-2 rounded-pill">
-                            <i class="bi bi-check-all me-1"></i> Đã Thanh Toán (MoMo)
+                            <i class="bi bi-check-all me-1"></i> Đã Thanh Toán 
                         </span>
                     @elseif($order->status === 'cod_ordered')
                         <span class="badge bg-info text-dark fs-8 px-3 py-2 rounded-pill">

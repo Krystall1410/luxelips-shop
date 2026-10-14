@@ -106,7 +106,7 @@
                         <label class="form-label text-slate-300">Trạng Thái Thanh Toán </label>
                         <select name="status" class="form-select">
                             <option value="pending" {{ $order->status === 'pending' ? 'selected' : '' }}>Chờ thanh toán (Pending)</option>
-                            <option value="paid" {{ $order->status === 'paid' ? 'selected' : '' }}>Đã thanh toán (Paid)</option>
+                            <option value="paid" {{ in_array($order->status, ['paid', 'cod_paid']) ? 'selected' : '' }}>Đã thanh toán (Paid)</option>
                             <option value="cod_ordered" {{ $order->status === 'cod_ordered' ? 'selected' : '' }}>Đã tạo đơn COD (COD Ordered)</option>
                             <option value="failed" {{ $order->status === 'failed' ? 'selected' : '' }}>Thất bại (Failed)</option>
                             <option value="cancelled" {{ $order->status === 'cancelled' ? 'selected' : '' }}>Đã hủy (Cancelled)</option>
