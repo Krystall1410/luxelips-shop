@@ -23,6 +23,10 @@ class AppServiceProvider extends ServiceProvider
             \Illuminate\Support\Facades\URL::forceScheme('https');
         }
 
+        \Illuminate\Support\Facades\Mail::extend('brevo', function (array $config = []) {
+            return new \App\Mail\Transport\BrevoTransport($config['key'] ?? env('BREVO_API_KEY', ''));
+        });
+
         \Illuminate\Support\Facades\View::composer('user.*', function ($view) {
             if (!$view->offsetExists('categories')) {
                 $view->with('categories', \App\Models\Category::where('is_active', true)

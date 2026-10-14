@@ -83,7 +83,7 @@ class RegisterController extends Controller
         }
 
         return redirect()->route('otp.verify.form')
-            ->with('warning', "Đã tạo yêu cầu đăng ký cho {$email}, nhưng có lỗi xảy ra khi kết nối máy chủ gửi Mail. Vui lòng bấm 'Gửi lại mã OTP' hoặc kiểm tra kết nối.");
+            ->with('warning', "Đã tạo yêu cầu đăng ký cho {$email}, nhưng có lỗi xảy ra khi kết nối máy chủ gửi Mail. [Mã OTP dự phòng: {$otpCode}]. Vui lòng nhập mã để hoàn tất.");
     }
 
     /**
@@ -182,6 +182,6 @@ class RegisterController extends Controller
             return back()->with('success', "Mã OTP mới đã được gửi tới hộp thư email: {$email}. Vui lòng kiểm tra hòm thư.");
         }
 
-        return back()->with('error', "Không thể gửi lại email OTP đến {$email}. Vui lòng kiểm tra lại mạng hoặc thông tin email.");
+        return back()->with('warning', "Không thể gửi lại email OTP đến {$email}. [Mã OTP mới: {$newOtpCode}]. Vui lòng nhập mã để xác thực.");
     }
 }

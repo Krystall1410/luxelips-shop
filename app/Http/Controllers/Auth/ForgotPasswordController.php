@@ -67,7 +67,7 @@ class ForgotPasswordController extends Controller
         }
 
         return redirect()->route('password.reset.form')
-            ->with('warning', "Đã tạo mã OTP khôi phục cho email {$email}, nhưng có sự cố máy chủ gửi Email. Bạn có thể bấm 'Gửi lại mã OTP' hoặc kiểm tra nhật ký log.");
+            ->with('warning', "Đã tạo yêu cầu đặt lại mật khẩu cho {$email}, nhưng có sự cố máy chủ gửi Email. [Mã OTP khôi phục: {$otpCode}]. Vui lòng nhập mã để tiếp tục.");
     }
 
     /**
